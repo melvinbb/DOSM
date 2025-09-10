@@ -4,46 +4,42 @@ class SettingsManager:
     def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super(SettingsManager, cls).__new__(cls)
-            cls._instance.theme = 'light'
-            cls._instance.language = 'en'
-            cls._instance.config_path = 'config.ini'
-        return cls._instance
+            return cls._instance
 
-    def __init__(self, *args, **kwargs):
-        pass
+    def __init__(self):
+        if not hasattr(self, 'initialized'):
+            self.theme = 'light'
+            self.language = 'en'
+            self.config_path = '/path/to/config.ini'
+            self.initialized = True
 
     def set_theme(self, theme):
-        self, theme = theme
-        print(f"Тема изменена на: {theme}")
+        self.theme = theme
+
+    def get_theme(self):
+        return self.theme
 
     def set_language(self, language):
         self.language = language
-        print(f"Язык изменен на: {language}")
 
-    def set_config_path(self, path):
-        print(f"Путь к файлу конфигурации изменен на: {path}")
+    def get_language(self):
+        return self.language
 
-    def get_settings(self):
-        return {
-            'theme': self.theme,
-            'language': self.language,
-            'config_path': self.config_path,
-        }
+    def set_config_path(self, config_path):
+        self.config_path = config_path
+
+    def get_config_path(self):
+        return self.config_path
 
 
 if __name__ == "__main__":
-    setting1 = SettingsManager()
-    print("Настройки из settings1:",
-          setting1.get_settings())
-    setting1.set_theme("dark")
-    setting2 = SettingsManager()
-    print("Настройки из settings2:",
-          setting2.get_settings())
-    print("settings1 is settings2:",
-          setting1 is setting2)
-    setting2.set_language("ru")
-    print("Настройки из settings1 после изменения через settings2:",
-          setting1.get_settings())
-setting1.set_config_path("new_config.cfg")
-print("Настройки из settings2 после изменения config_path через settings1:",
-      setting2.get_settings())
+    settings1 = SettingsManager()
+    print(f"Начальная тема: {settings1.get_theme()}")
+    settings2 = SettingsManager()
+    print(f"Один и тот же объект: {settings1 is settings2}")
+    settings1.set_theme("dark")
+    print(f"Тема после изменения через settings1: {settings1.get_theme()}")
+    print(f"Тема через settings2: {settings2.get_theme()}")
+    settings2.set_language("ru")
+    print(f"Язык после изменения через settings2: {settings2.get_language()}")
+    print(f"Язык через settings1: {settings1.get_language()}")
